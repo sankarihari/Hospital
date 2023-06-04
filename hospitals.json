@@ -1,0 +1,37 @@
+[
+  {
+    "Name of the hospital": "MIMS hospital",
+    "Patient Count": 800,
+    "Hospital location": "Calicut"
+  },
+  {
+    "Name of the hospital": "Beach Hospital",
+    "Patient Count": 900,
+    "Hospital location": "Calicut"
+  },
+  {
+    "Name of the hospital": "MES Hospital",
+    "Patient Count": 900,
+    "Hospital location": "Malappuram"
+  },
+  {
+    "Name of the hospital": "Lakeshore Hospital",
+    "Patient Count": 950,
+    "Hospital location": "Kochi"
+  },
+  {
+    "Name of the hospital": "Aster Hospital",
+    "Patient Count": 840,
+    "Hospital location": "Chennai"
+  },
+  {
+    "Name of the hospital": "Apollo cradle hospital",
+    "Patient Count": 600,
+    "Hospital location": "Kottayam"
+  },
+  {
+    "Name of the hospital": "Starcare Hospital",
+    "Patient Count": 450,
+    "Hospital location": "Calicut"
+  }
+]

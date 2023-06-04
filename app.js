@@ -1,35 +1,82 @@
 const express = require('express');
-const app = new express();
+const bodyParser = require('body-parser');
 const fs = require('fs');
-const morgan =require('morgan');
 
-app.use(morgan('dev'));
-
-const jsonData = fs.readFileSync('/data.json', 'utf8');
-const data = JSON.parse(jsonData);
-app.get('/',(req,res)=>{
-    res.send('Loading my page');
-})   
-
-// Create operation
-data.push({ nameOfhospital:"CRADDLE",patientCount:400,hospitalLocation:"Kottayam" });
-
-// Read operations
-const object = data.find(item => item.nameOfhospital === 'MIMS');
-console.log(object);
-
-// Update operation
-object.nameOfhospital  = 'Placeofhospital';
-
-// Delete operation
-const index = data.findIndex(item => item.patientCount  === 900);
-if (index !== -1) {
-  data.splice(index, 1);
-}
-// Write the changes back to the JSON file
-const updatedJsonData = JSON.stringify(data);
-fs.writeFileSync('/data.json', updatedJsonData);
+const app = express();
+const port = 3000;
+const PORT=process.env.PORT || 3000;
 
 
- 
-app.listen(5000); 
+// Middleware
+app.use(bodyParser.json());
+
+// Read hospitals data from JSON file
+const readHospitalsData = () => {
+    const rawData = fs.readFileSync('hospitals.json');
+    return JSON.parse(rawData);
+  };
+  
+  // Write hospitals data to JSON file
+const writeHospitalsData = (data) => {
+    fs.writeFileSync('hospitals.json', JSON.stringify(data, null, 2));
+  };
+
+// GET all hospitals
+app.get('/hospitals', (req, res) => {
+    const hospitals = readHospitalsData();
+    res.json(hospitals);
+  });
+
+
+  // GET a specific hospital by index
+app.get('/hospitals/:index', (req, res) => {
+    const hospitals = readHospitalsData();
+    const index = req.params.index;
+    if (index < hospitals.length) {
+      res.json(hospitals[index]);
+    } else {
+      res.status(404).send('Hospital not found.');
+    }
+  });
+  
+
+  // POST a new hospital
+app.post('/hospitals', (req, res) => {
+    const hospitals = readHospitalsData();
+    const newHospital = req.body;
+    hospitals.push(newHospital);
+    writeHospitalsData(hospitals);
+    res.send('Hospital added successfully.');
+  });
+
+  // PUT (update) a hospital by index
+app.put('/hospitals/:index', (req, res) => {
+    const hospitals = readHospitalsData();
+    const index = req.params.index;
+    if (index < hospitals.length) {
+      hospitals[index] = req.body;
+      writeHospitalsData(hospitals);
+      res.send('Hospital updated successfully.');
+    } else {
+      res.status(404).send('Hospital not found.');
+    }
+  });
+  
+
+  // DELETE a hospital by index
+app.delete('/hospitals/:index', (req, res) => {
+    const hospitals = readHospitalsData();
+    const index = req.params.index;
+    if (index < hospitals.length) {
+      hospitals.splice(index, 1);
+      writeHospitalsData(hospitals);
+      res.send('Hospital deleted successfully.');
+    } else {
+      res.status(404).send('Hospital not found.');
+    }
+  });
+
+  // Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
